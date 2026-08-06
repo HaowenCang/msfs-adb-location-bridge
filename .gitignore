@@ -16,6 +16,9 @@ logs/
 # Runtime recovery file
 runtime-recovery.json
 
+# Temp files (per user convention, TEMP under working directory)
+.tmp/
+
 # Windows
 Thumbs.db
 Desktop.ini

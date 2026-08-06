@@ -21,6 +21,8 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 ## 1. 环境信息（2026-08 记录）
 
 > **安装约定（2026-08 用户指令，长期生效）**：此后所有软件一律安装到 `E:\Laptop\softwares` 下（如 adb 位于 `E:\Laptop\softwares\AndroidSdk`）。已安装的 MSFS 2024 SDK（`C:\MSFS SDK`）维持现状不动。
+>
+> **临时文件约定（2026-08 用户指令，长期生效）**：TEMP 等临时文件统一创建在项目工作目录下：`<项目根>/.tmp`（已加入 .gitignore，不提交）。
 
 | 项 | 状态 | 值/路径 |
 |---|---|---|
