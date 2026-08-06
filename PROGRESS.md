@@ -25,14 +25,14 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 | 项目目录 | 就绪 | `E:/Projects/Pi/MSFS GPS TO ANDROID` |
 | git | 已初始化 | 本仓库 |
 | GitHub CLI | 可用 | 已登录 `HaowenCang`，scopes: repo |
-| GitHub 远程仓库 | 待创建 | 名称待用户审核（见 §4） |
+| GitHub 远程仓库 | **已创建（公开）** | `https://github.com/HaowenCang/msfs-adb-location-bridge`，初始提交已推送 |
 | dotnet SDK | 已有 | 8.0.422（另有 9.0 runtime） |
-| Visual Studio 2022 | **缺失** | 待讨论（见 §4） |
-| .NET Framework 4.8 Developer Pack | **缺失** | 仅有 v4.7.2 reference assemblies；4.8 运行时 Windows 11 自带 |
-| MSFS 2024 游戏 | 未定位 | 待用户提供安装位置 |
-| MSFS 2024 SDK | 未定位 | 待用户提供；SimConnect 托管 dll 位于 SDK 的 `SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll` |
+| Visual Studio 2022 | 手动安装中（用户接管） | 安装包已缓存：`%LOCALAPPDATA%\Temp\WinGet\Microsoft.VisualStudio.2022.Community.17.14.37\vs_Community.exe`（17.14.37） |
+| .NET Framework 4.8 Developer Pack | 随 VS 安装 | VS 组件 `Microsoft.Net.Component.4.8.SDK`；4.8 运行时 Windows 11 自带 |
+| MSFS 2024 游戏 | 已确认 | `E:\XboxGames\Microsoft Flight Simulator 2024`（Xbox 版） |
+| MSFS 2024 SDK | **已安装** | `C:\MSFS SDK`（0.24.5，实际路径无 "2024" 后缀）；托管 dll：`C:\MSFS SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll` |
 | adb | 已有 | `E:/Laptop/softwares/AndroidSdk/platform-tools/adb.exe`（37.0.0） |
-| Android 设备 | 已连接并授权 | 序列号 `c3a3ea64`，型号 `25019PNF3C` |
+| Android 设备 | 已连接并授权 | 序列号 `c3a3ea64`，型号 `25019PNF3C`，shell UID `2000` |
 
 ## 2. 阶段总览
 
@@ -54,18 +54,15 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 
 任务清单：
 
-- [ ] 与用户确认开发环境选型（VS 2022 安装 / dotnet CLI + ReferenceAssemblies / 改用 .NET 8）
-- [ ] 确认 MSFS 2024 游戏安装位置（用于后续 SimConnect 联调）
-- [ ] 确认 MSFS 2024 SDK 安装位置；确认 `Microsoft.FlightSimulator.SimConnect.dll` 存在
-- [ ] 建立 GitHub 远程仓库（名称经用户审核），推送初始提交
-- [ ] 执行方案 §5.4 手工可行性测试（设备 `c3a3ea64`）：
-  - `cmd location set-location-enabled true`
-  - `appops set 2000 android:mock_location allow`
-  - 清理并重建 `gps` 测试提供器（`--requiresSatellite`）
-  - 注入上海坐标 `31.2304,121.4737`（accuracy 3）
-- [ ] 用户确认手机地图位置变化（5 秒内移动到指定坐标）
-- [ ] 执行方案 §5.5 手工恢复（禁用/删除 provider、恢复 appops 默认值）
-- [ ] 记录测试结果与设备 shell UID 至本文件
+- [x] 与用户确认开发环境选型（D2 已定：A，VS 2022 Community）
+- [x] 确认 MSFS 2024 游戏安装位置（D3：`E:\XboxGames\Microsoft Flight Simulator 2024`）
+- [x] 确认并安装 MSFS 2024 SDK（D3：`C:\MSFS SDK` 0.24.5，SimConnect 托管 dll 已验证）
+- [x] 建立 GitHub 远程仓库（D1：`msfs-adb-location-bridge` 公开仓库），初始提交已推送
+- [x] 手工可行性测试（D4：用户已完成）
+- [x] 执行方案 §5.5 手工恢复（2026-08-06：provider 无残留、AppOp 已恢复 default、定位开关当前 true）
+- [x] 记录设备 shell UID = 2000
+- [ ] 安装 Visual Studio 2022 Community（**用户手动安装中**；安装包已缓存：`%LOCALAPPDATA%\Temp\WinGet\Microsoft.VisualStudio.2022.Community.17.14.37\vs_Community.exe`）
+- [ ] VS 安装完成后验证：MSBuild 可用、net48 targeting pack（`C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8`）存在
 
 验收标准（方案 §19 阶段一）：手工注入后 5 秒内地图移动到指定坐标；删除测试提供器后恢复真实定位；无遗留异常。
 
@@ -142,14 +139,15 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 
 | # | 日期 | 事项 | 选项 | 用户决定 |
 |---|---|---|---|---|
-| D1 | 2026-08 | 仓库名称 | A: `msfs-location-bridge`；B: `msfs-gps-to-android`；C: `msfs-adb-location-bridge` | 待审核 |
-| D2 | 2026-08 | 开发环境选型 | A: 安装 VS 2022（Community/Build Tools）+ .NET Framework 4.8 Dev Pack；B: dotnet CLI + `Microsoft.NETFramework.ReferenceAssemblies` NuGet 包构建 net48（无需 VS，无图形调试）；C: 改用 .NET 8 WinForms（偏离方案，需用户明确同意） | 待定 |
-| D3 | 2026-08 | MSFS 2024 SDK 位置 | 用户提供安装路径；若未安装 SDK 则需先安装 | 待定 |
-| D4 | 2026-08 | 手工测试时机 | 设备已连接授权，可立即执行阶段 0 手工测试（需用户配合查看手机地图）；或延后 | 待定 |
+| D1 | 2026-08 | 仓库名称 | C: `msfs-adb-location-bridge` | **已定：C**，公开仓库已创建并推送初始提交 |
+| D2 | 2026-08 | 开发环境选型 | A: 安装 VS 2022（Community）+ .NET Framework 4.8 Dev Pack；B: dotnet CLI + ReferenceAssemblies；C: 改用 .NET 8 | **已定：A**（Community），由用户手动安装，安装包已缓存 |
+| D3 | 2026-08 | MSFS 2024 SDK 位置 | 游戏位于 `E:\XboxGames\Microsoft Flight Simulator 2024`（Xbox 版，未含 SDK） | **已定**：自动下载安装完成 → `C:\MSFS SDK` 0.24.5 |
+| D4 | 2026-08 | 手工测试时机 | 手工测试由用户自行完成 | **已定**：不再执行；§5.5 恢复已执行（2026-08-06，provider 无残留、AppOp 恢复 default、定位开关当前为 true） |
 | D5 | 2026-08 | GitHub 上传粒度 | 按用户要求：每阶段结束上传（含阶段 0 前的初始提交上传） | 已定：按阶段上传 |
 
 ## 5. 提交与版本历史
 
 | 日期 | commit | tag | 说明 |
 |---|---|---|---|
-| 2026-08 | （待创建） | — | 初始提交：技术方案 + 本进度文件 |
+| 2026-08 | `a3ab9a5`（已推送 origin/main） | — | 初始提交：技术方案 + 本进度文件 |
+| 2026-08 | （本次提交） | — | 阶段 0 进度更新：仓库创建、SDK 安装、§5.5 恢复完成、VS 安装移交用户 |
