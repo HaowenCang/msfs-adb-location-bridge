@@ -31,7 +31,7 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 | GitHub CLI | 可用 | 已登录 `HaowenCang`，scopes: repo |
 | GitHub 远程仓库 | **已创建（公开）** | `https://github.com/HaowenCang/msfs-adb-location-bridge`，初始提交已推送 |
 | dotnet SDK | 已有 | 8.0.422（另有 9.0 runtime） |
-| Visual Studio 2022 | **已安装**（17.14.37516.0） | 路径 `E:\Laptop\softwares\Microsoft Visual Studio 2022`；**.NET Framework 4.8 SDK 组件已补装（2026-08-06 用户操作）**，net48 构建已验证；**遗留：VS 实例内缺 .NET SDK 集成组件（`MSBuild\Sdks\Microsoft.NET.Sdk` 不存在），SDK 风格项目在 VS 内构建会失败（见 D6）** |
+| Visual Studio 2022 | **已安装**（17.14.37516.0） | 路径 `E:\Laptop\softwares\Microsoft Visual Studio 2022`；4.8 Dev Pack 与 .NET SDK 组件均已补装；**VS MSBuild 构建 net48 SDK 风格项目已验证通过（2026-08-06）** |
 | .NET Framework 4.8 Developer Pack | 随 VS 安装 | VS 组件 `Microsoft.Net.Component.4.8.SDK`；4.8 运行时 Windows 11 自带 |
 | MSFS 2024 游戏 | 已确认 | `E:\XboxGames\Microsoft Flight Simulator 2024`（Xbox 版） |
 | MSFS 2024 SDK | **已安装** | `C:\MSFS SDK`（0.24.5，实际路径无 "2024" 后缀）；托管 dll：`C:\MSFS SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll` |
@@ -42,7 +42,7 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 
 | 阶段 | 名称 | 状态 | 对应方案章节 |
 |---|---|---|---|
-| 阶段 0 | 环境准备与手工可行性验证 | 未开始 | §4、§5.4、§5.5、§19 阶段一 |
+| 阶段 0 | 环境准备与手工可行性验证 | ✅ 已完成（2026-08-06，tag v0.0.1） | §4、§5.4、§5.5、§19 阶段一 |
 | 阶段 1 | 概念验证：SimConnect 读取 + 独立 adb 注入 | 未开始 | §21 阶段一、§7 |
 | 阶段 2 | 可用版本：WinForms 界面 + 自动恢复 + 配置日志 | 未开始 | §21 阶段二、§6、§14、§16、§17、§18 |
 | 阶段 3 | 稳定版本：长期 shell + 崩溃恢复 + 状态机 | 未开始 | §21 阶段三、§10.4、§12、§13、§15 |
@@ -68,7 +68,9 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 - [x] 安装 Visual Studio 2022 Community（2026-08-06 用户手动完成，17.14.37516.0 → `E:\Laptop\softwares\Microsoft Visual Studio 2022`）
 - [x] 补装 .NET Framework 4.8 SDK 组件（2026-08-06 用户完成；v4.8 reference assemblies 已存在，vswhere 确认组件）
 - [x] 工具链验证：dotnet CLI 8.0.422 构建 net48 控制台程序成功（CLR 4.0.30319）；**WinForms net48 构建成功**（阶段 2 前置验证）
-- [ ] 待决策 D6：VS 实例内 .NET SDK 集成组件缺失（`MSBuild\Sdks\Microsoft.NET.Sdk` 不存在）→ VS 内构建 SDK 风格项目将失败；选项：A 补装 VS 的 .NET SDK 组件；B 采用 dotnet CLI 构建 + VS 编辑/附加调试
+- [x] 待决策 D6：VS 实例内 .NET SDK 集成组件缺失 → **已定：A（补装，2026-08-06 用户完成）**；验证：vswhere 确认 `Microsoft.NetCore.Component.SDK` 注册，VS MSBuild 构建 net48 SDK 风格项目成功
+
+**阶段 0 验收结论（2026-08-06）**：手工测试用户已完成；§5.5 恢复已执行且无残留；工具链（VS 2022 + 4.8 Dev Pack + .NET SDK 组件 + adb + MSFS SDK）全部就绪并经冒烟验证。→ 已打 tag `v0.0.1`。
 
 验收标准（方案 §19 阶段一）：手工注入后 5 秒内地图移动到指定坐标；删除测试提供器后恢复真实定位；无遗留异常。
 
@@ -150,7 +152,7 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 | D3 | 2026-08 | MSFS 2024 SDK 位置 | 游戏位于 `E:\XboxGames\Microsoft Flight Simulator 2024`（Xbox 版，未含 SDK） | **已定**：自动下载安装完成 → `C:\MSFS SDK` 0.24.5 |
 | D4 | 2026-08 | 手工测试时机 | 手工测试由用户自行完成 | **已定**：不再执行；§5.5 恢复已执行（2026-08-06，provider 无残留、AppOp 恢复 default、定位开关当前为 true） |
 | D5 | 2026-08 | GitHub 上传粒度 | 按用户要求：每阶段结束上传（含阶段 0 前的初始提交上传） | 已定：按阶段上传 |
-| D6 | 2026-08 | VS 内 .NET SDK 组件缺失 | A: 补装 VS 的 .NET SDK 组件（VS Installer → 修改 → 勾选 .NET SDK）；B: dotnet CLI 构建（已验证可行）+ VS 仅编辑/附加调试 | 待定 |
+| D6 | 2026-08 | VS 内 .NET SDK 组件缺失 | A: 补装 VS 的 .NET SDK 组件（VS Installer → 修改 → 勾选 .NET SDK）；B: dotnet CLI 构建（已验证可行）+ VS 仅编辑/附加调试 | **已定：A**（2026-08-06 补装完成，VS MSBuild 构建 net48 验证通过） |
 
 ## 5. 提交与版本历史
 
@@ -158,3 +160,4 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 |---|---|---|---|
 | 2026-08 | `a3ab9a5`（已推送 origin/main） | — | 初始提交：技术方案 + 本进度文件 |
 | 2026-08 | （本次提交） | — | 阶段 0 进度更新：仓库创建、SDK 安装、§5.5 恢复完成、VS 安装移交用户 |
+| 2026-08 | （本次提交） | **v0.0.1** | 阶段 0 完成：VS .NET SDK 组件补装验证通过，工具链全就绪 |
