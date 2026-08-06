@@ -1,0 +1,21 @@
+# Build results
+bin/
+obj/
+*.user
+*.suo
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Runtime recovery file
+runtime-recovery.json
+
+# Windows
+Thumbs.db
+Desktop.ini
