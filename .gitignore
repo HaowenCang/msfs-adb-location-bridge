@@ -22,3 +22,6 @@ runtime-recovery.json
 # Windows
 Thumbs.db
 Desktop.ini
+
+# pi-glla extension runtime state
+.pi-glla/
