@@ -1,0 +1,10 @@
+{"type":"session_rebound","value":{"reason":"startup"},"at":"2026-08-06T10:43:17.839Z"}
+{"type":"session_waiting_for_load","value":{"reason":"startup"},"at":"2026-08-06T10:43:17.868Z"}
+{"type":"session_shutdown","value":{"reason":"resume"},"at":"2026-08-06T10:43:54.640Z"}
+{"type":"session_rebound","value":{"reason":"resume"},"at":"2026-08-06T10:43:54.709Z"}
+{"type":"session_rebound","value":{"reason":"startup"},"at":"2026-08-06T10:44:42.506Z"}
+{"type":"session_waiting_for_load","value":{"reason":"startup"},"at":"2026-08-06T10:44:42.526Z"}
+{"type":"session_shutdown","value":{"reason":"quit"},"at":"2026-08-06T10:45:16.572Z"}
+{"type":"session_rebound","value":{"reason":"startup"},"at":"2026-08-06T10:45:24.555Z"}
+{"type":"session_waiting_for_load","value":{"reason":"startup"},"at":"2026-08-06T10:45:24.587Z"}
+{"type":"session_shutdown","value":{"reason":"quit"},"at":"2026-08-06T10:45:53.347Z"}

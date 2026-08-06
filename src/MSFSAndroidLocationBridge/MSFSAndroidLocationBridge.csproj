@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RootNamespace>MSFSAndroidLocationBridge</RootNamespace>
+    <AssemblyName>MSFSAndroidLocationBridge</AssemblyName>
+    <LangVersion>7.3</LangVersion>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <!-- MSFS 2024 SDK SimConnect 托管包装器（本机 SDK 路径：C:\MSFS SDK，见 PROGRESS.md §1） -->
+  <ItemGroup>
+    <Reference Include="Microsoft.FlightSimulator.SimConnect">
+      <HintPath>C:\MSFS SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- SimConnect 原生 dll（x64）随输出复制 -->
+  <ItemGroup>
+    <None Include="C:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll">
+      <Link>SimConnect.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -43,7 +43,7 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 | 阶段 | 名称 | 状态 | 对应方案章节 |
 |---|---|---|---|
 | 阶段 0 | 环境准备与手工可行性验证 | ✅ 已完成（2026-08-06，tag v0.0.1） | §4、§5.4、§5.5、§19 阶段一 |
-| 阶段 1 | 概念验证：SimConnect 读取 + 独立 adb 注入 | 未开始 | §21 阶段一、§7 |
+| 阶段 1 | 概念验证：SimConnect 读取 + 独立 adb 注入 | 开发完成，待联调验证 | §21 阶段一、§7 |
 | 阶段 2 | 可用版本：WinForms 界面 + 自动恢复 + 配置日志 | 未开始 | §21 阶段二、§6、§14、§16、§17、§18 |
 | 阶段 3 | 稳定版本：长期 shell + 崩溃恢复 + 状态机 | 未开始 | §21 阶段三、§10.4、§12、§13、§15 |
 | 阶段 4 | 扩展版本：Android App 完整 Location | 未开始（仅按需启动） | §21 阶段四 |
@@ -82,14 +82,15 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 
 任务清单：
 
-- [ ] 创建解决方案骨架（按方案 §6 结构，先以控制台/最小 WinForms 承载）
-- [ ] SimConnectService：连接 MSFS 2024、注册方案 §7.1 字段、`RequestDataOnSimObject(SIM_FRAME)`
-- [ ] 验证读取正确性：经纬度单位为度、随飞机移动连续更新、返回主菜单后数据停止
-- [ ] AdbCommandService：定位 adb.exe（本机路径已知）、`start-server`、`devices -l`、带序列号执行命令
-- [ ] MockLocationService：保存原始状态 → 授权 → 建 provider → 注入（§9 流程）
-- [ ] InjectionScheduler：每 500 ms 启动一次 adb.exe 注入（§10.4 MVP），单命令超时 1 s
-- [ ] 停止时手工清理（§5.5 / §14 流程手动执行）
-- [ ] 与用户联调：MSFS 起飞后手机地图跟随（2 Hz）
+- [x] 创建解决方案骨架（`src/MSFSAndroidLocationBridge/`：MainForm + Models + Services，WinForms 承载 SimConnect 消息泵，符合 §7.4）
+- [x] SimConnectService：连接 MSFS 2024、注册 §7.1 七个字段、`RequestDataOnSimObject(SIM_FRAME)`、订阅 Sim/PositionChanged 事件、§8 有效性检查 + 连续有效计数
+- [x] AdbCommandService：定位 adb.exe、`devices -l` 枚举、带序列号执行、超时终止（net48 无 ArgumentList，已实现命令行拼接）
+- [x] MockLocationService：§9 流程（保存原始状态 → 清理遗留 → 授权 → 建 provider → 启用）、§10.1 注入命令（InvariantCulture F7）、§14 恢复顺序，全部幂等
+- [x] InjectionScheduler：500 ms 周期（2 Hz）、最新值覆盖、单命令在执行则跳帧、1 s 超时
+- [x] 停止时自动恢复（FormClosing 强制恢复真实定位）
+- [ ] **联调验证（待用户配合）**：MSFS 进入飞行 → 程序自动连接 → 点“连接并开始注入” → 手机地图跟随（2 Hz）→ 停止后真实定位恢复
+
+**开发记录（2026-08-06）**：MSFS 2024 SDK 0.24.5 托管包装器 API 与方案 §7.2 的示例不同——构造第 4 参为 `WaitHandle`、命令方法参数为 `Enum`、`SIMCONNECT_RECV_SIMOBJECT_DATA.dwData` 为 `object[]`（按 AddToDataDefinition 顺序），故未使用 `RegisterDataDefineStruct` 封送，改为数组取值（阶段 2/3 继续沿用）。UI 冒烟测试通过。
 
 验收标准：手机地图随飞机移动；无进程积压；停止后真实定位恢复。
 
@@ -161,3 +162,4 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 | 2026-08 | `a3ab9a5`（已推送 origin/main） | — | 初始提交：技术方案 + 本进度文件 |
 | 2026-08 | （本次提交） | — | 阶段 0 进度更新：仓库创建、SDK 安装、§5.5 恢复完成、VS 安装移交用户 |
 | 2026-08 | （本次提交） | **v0.0.1** | 阶段 0 完成：VS .NET SDK 组件补装验证通过，工具链全就绪 |
+| 2026-08 | （本次提交） | —（联调通过后打 v0.1.0） | 阶段 1 开发完成：SimConnect 读取 + 独立 adb 注入（2 Hz），待联调验证 |
