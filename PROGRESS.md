@@ -31,7 +31,7 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 | GitHub CLI | 可用 | 已登录 `HaowenCang`，scopes: repo |
 | GitHub 远程仓库 | **已创建（公开）** | `https://github.com/HaowenCang/msfs-adb-location-bridge`，初始提交已推送 |
 | dotnet SDK | 已有 | 8.0.422（另有 9.0 runtime） |
-| Visual Studio 2022 | 手动安装中（用户接管） | 安装包已缓存至项目：`<项目根>\.tmp\vs_Community.exe`（17.14.37）；**安装路径：`E:\Laptop\softwares\Visual Studio 2022`**（注意：VS 的共享组件/下载缓存仍由 VS 机制置于 C 盘，无法完全搬移） |
+| Visual Studio 2022 | **已安装**（17.14.37516.0） | 路径 `E:\Laptop\softwares\Microsoft Visual Studio 2022`（用户安装时实际目录名含 "Microsoft " 前缀）；**.NET Framework 4.8 SDK 组件待补装**（参考程序集目录仅有 v4.7.2；命令行静默补装受阻：`--quiet` 需从提权进程启动，Exit 5007/87） |
 | .NET Framework 4.8 Developer Pack | 随 VS 安装 | VS 组件 `Microsoft.Net.Component.4.8.SDK`；4.8 运行时 Windows 11 自带 |
 | MSFS 2024 游戏 | 已确认 | `E:\XboxGames\Microsoft Flight Simulator 2024`（Xbox 版） |
 | MSFS 2024 SDK | **已安装** | `C:\MSFS SDK`（0.24.5，实际路径无 "2024" 后缀）；托管 dll：`C:\MSFS SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll` |
@@ -65,8 +65,9 @@ MSFS 2024 → SimConnect → Windows 桥接程序 → adb shell cmd location →
 - [x] 手工可行性测试（D4：用户已完成）
 - [x] 执行方案 §5.5 手工恢复（2026-08-06：provider 无残留、AppOp 已恢复 default、定位开关当前 true）
 - [x] 记录设备 shell UID = 2000
-- [ ] 安装 Visual Studio 2022 Community（**用户手动安装中**；安装包位于 `<项目根>\.tmp\vs_Community.exe`；**目标路径 `E:\Laptop\softwares\Visual Studio 2022`**）
-- [ ] VS 安装完成后验证：MSBuild 可用、net48 targeting pack（`C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8`）存在
+- [x] 安装 Visual Studio 2022 Community（2026-08-06 用户手动完成，17.14.37516.0 → `E:\Laptop\softwares\Microsoft Visual Studio 2022`）
+- [ ] 补装 .NET Framework 4.8 SDK 组件（用户操作：VS Installer → 修改 → 单个组件 → ".NET Framework 4.8 SDK"；或管理员 PowerShell 执行 `setup.exe modify --installPath "E:\Laptop\softwares\Microsoft Visual Studio 2022" --add Microsoft.Net.Component.4.8.SDK --quiet --wait --norestart`）
+- [ ] VS 补装完成后验证：net48 targeting pack（`C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8`）存在
 
 验收标准（方案 §19 阶段一）：手工注入后 5 秒内地图移动到指定坐标；删除测试提供器后恢复真实定位；无遗留异常。
 
